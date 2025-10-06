@@ -97,6 +97,10 @@
       *ngIf="!isSearching && searchControl.value && searchResults.length === 0">
       <mat-icon>search_off</mat-icon>
       <p>No documents found matching "{{ searchControl.value }}"</p>
+      <p class="no-results-hint">
+        Try different keywords or check your spelling. 
+        <br>Note: Very short words (less than 3 characters) may not return results.
+      </p>
     </div>
 
     <!-- Initial State -->

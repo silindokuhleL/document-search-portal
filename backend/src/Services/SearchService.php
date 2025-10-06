@@ -37,40 +37,81 @@ class SearchService
                 'page' => $page,
                 'limit' => $limit,
                 'totalPages' => 0,
-                'searchTime' => 0
+                'searchTime' => 0,
+                'cached' => false
             ];
         }
         
         $offset = ($page - 1) * $limit;
         
-        // Use MySQL FULLTEXT search for better performance
-        $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'relevance DESC';
+        // Check if query contains short words (< 4 chars) - MySQL FULLTEXT limitation
+        $words = explode(' ', $query);
+        $hasShortWords = false;
+        foreach ($words as $word) {
+            if (strlen(trim($word)) < 4 && strlen(trim($word)) > 0) {
+                $hasShortWords = true;
+                break;
+            }
+        }
         
-        $sql = "SELECT 
-                    id, 
-                    filename, 
-                    original_filename, 
-                    file_size, 
-                    file_type, 
-                    created_at,
-                    MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE) as relevance,
-                    SUBSTRING(content_text, 1, 500) as preview
-                FROM documents 
-                WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
-                ORDER BY $orderClause
-                LIMIT ? OFFSET ?";
-        
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$query, $query, $limit, $offset]);
-        $results = $stmt->fetchAll();
-        
-        // Get total count
-        $countSql = "SELECT COUNT(*) as total 
-                     FROM documents 
-                     WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)";
-        $countStmt = $this->db->prepare($countSql);
-        $countStmt->execute([$query]);
-        $total = $countStmt->fetch()['total'];
+        // Use LIKE fallback for short words, FULLTEXT for longer queries
+        if ($hasShortWords) {
+            // Fallback to LIKE search for short words
+            $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'created_at DESC';
+            
+            $sql = "SELECT 
+                        id, 
+                        filename, 
+                        original_filename, 
+                        file_size, 
+                        file_type, 
+                        created_at,
+                        1 as relevance,
+                        SUBSTRING(content_text, 1, 500) as preview
+                    FROM documents 
+                    WHERE content_text LIKE ?
+                    ORDER BY $orderClause
+                    LIMIT ? OFFSET ?";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['%' . $query . '%', $limit, $offset]);
+            $results = $stmt->fetchAll();
+            
+            // Get total count for LIKE search
+            $countSql = "SELECT COUNT(*) as total FROM documents WHERE content_text LIKE ?";
+            $countStmt = $this->db->prepare($countSql);
+            $countStmt->execute(['%' . $query . '%']);
+            $total = $countStmt->fetch()['total'];
+        } else {
+            // Use MySQL FULLTEXT search for better performance
+            $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'relevance DESC';
+            
+            $sql = "SELECT 
+                        id, 
+                        filename, 
+                        original_filename, 
+                        file_size, 
+                        file_type, 
+                        created_at,
+                        MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE) as relevance,
+                        SUBSTRING(content_text, 1, 500) as preview
+                    FROM documents 
+                    WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
+                    ORDER BY $orderClause
+                    LIMIT ? OFFSET ?";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$query, $query, $limit, $offset]);
+            $results = $stmt->fetchAll();
+            
+            // Get total count for FULLTEXT search
+            $countSql = "SELECT COUNT(*) as total 
+                         FROM documents 
+                         WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)";
+            $countStmt = $this->db->prepare($countSql);
+            $countStmt->execute([$query]);
+            $total = $countStmt->fetch()['total'];
+        }
         
         // Highlight matches in preview
         foreach ($results as &$result) {
@@ -80,20 +121,14 @@ class SearchService
         $endTime = microtime(true);
         $searchTime = round(($endTime - $startTime) * 1000, 2); // Convert to milliseconds
         
-        $result = [
+        return [
             'results' => $results,
             'total' => (int)$total,
             'page' => $page,
             'limit' => $limit,
             'totalPages' => ceil($total / $limit),
-            'searchTime' => $searchTime,
-            'cached' => false
+            'searchTime' => $searchTime
         ];
-        
-        // Cache the result for 5 minutes (300 seconds)
-        $this->cache->set($cacheKey, $result, 300);
-        
-        return $result;
     }
     
     public function getSuggestions(string $query, int $limit = 5): array

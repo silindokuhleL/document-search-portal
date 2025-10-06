@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, timeout, catchError } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
 import { DocumentService } from '../../services/document.service';
 import { SearchResult } from '../../models/document.model';
@@ -54,22 +54,44 @@ export class SearchComponent implements OnInit {
 
   performSearch(query: string): void {
     if (!query || query.trim().length === 0) {
+      this.searchResults = [];
+      this.totalResults = 0;
       return;
     }
 
     this.isSearching = true;
 
     this.searchService.search(query, this.sortBy, this.currentPage, this.pageSize)
+      .pipe(
+        timeout(30000), // 30 second timeout
+        catchError(error => {
+          console.error('Search error:', error);
+          return of({
+            results: [],
+            total: 0,
+            page: this.currentPage,
+            limit: this.pageSize,
+            totalPages: 0,
+            searchTime: 0
+          });
+        })
+      )
       .subscribe({
         next: (response) => {
-          this.searchResults = response.results;
-          this.totalResults = response.total;
-          this.totalPages = response.totalPages;
-          this.searchTime = response.searchTime;
+          this.searchResults = response.results || [];
+          this.totalResults = response.total || 0;
+          this.totalPages = response.totalPages || 0;
+          this.searchTime = response.searchTime || 0;
           this.isSearching = false;
         },
         error: (error) => {
           console.error('Search error:', error);
+          this.searchResults = [];
+          this.totalResults = 0;
+          this.isSearching = false;
+        },
+        complete: () => {
+          // Ensure loading stops even if something goes wrong
           this.isSearching = false;
         }
       });
