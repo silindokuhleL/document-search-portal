@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Document Details</h2>
+
+<mat-dialog-content>
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="document && !isLoading" class="document-details">
+    <div class="detail-row">
+      <strong>Filename:</strong>
+      <span>{{ document.original_filename }}</span>
+    </div>
+
+    <div class="detail-row">
+      <strong>Type:</strong>
+      <span>{{ document.file_type }}</span>
+    </div>
+
+    <div class="detail-row">
+      <strong>Created:</strong>
+      <span>{{ document.created_at | date:'medium' }}</span>
+    </div>
+
+    <div class="content-section">
+      <strong>Content Preview:</strong>
+      <div class="file-preview" [innerHTML]="document.content_text"></div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+  <button mat-raised-button color="primary" (click)="download()" *ngIf="document">
+    <mat-icon>download</mat-icon>
+    Download
+  </button>
+</mat-dialog-actions>

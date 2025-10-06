@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+  <mat-icon>search</mat-icon>
+  <span>{{ title }}</span>
+</mat-toolbar>
+
+<div class="container">
+  <mat-tab-group [(selectedIndex)]="activeTab" (selectedIndexChange)="onTabChange($event)">
+    <mat-tab label="Documents">
+      <div class="tab-content">
+        <app-uploader (uploadComplete)="onUploadComplete()"></app-uploader>
+        <app-document-list></app-document-list>
+      </div>
+    </mat-tab>
+    
+    <mat-tab label="Search">
+      <div class="tab-content">
+        <app-search></app-search>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

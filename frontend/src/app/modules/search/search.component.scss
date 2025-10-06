@@ -1,0 +1,153 @@
+.search-container {
+  position: relative;
+}
+
+.search-field {
+  width: 100%;
+  font-size: 16px;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: -16px;
+
+  .suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #666;
+    }
+  }
+}
+
+.search-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+
+  .search-info {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .sort-field {
+    width: 200px;
+  }
+}
+
+.search-results {
+  margin-top: 24px;
+}
+
+.result-item {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+}
+
+.result-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  .file-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    
+    &.picture_as_pdf {
+      color: #d32f2f;
+    }
+    
+    &.description {
+      color: #1976d2;
+    }
+    
+    &.text_snippet {
+      color: #388e3c;
+    }
+  }
+
+  .result-info {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+      color: #1976d2;
+    }
+
+    .result-meta {
+      display: flex;
+      gap: 8px;
+      color: #666;
+      font-size: 0.9em;
+
+      .relevance {
+        color: #2e7d32;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.result-preview {
+  background-color: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+  line-height: 1.6;
+  color: #333;
+  font-size: 0.95em;
+}
+
+.no-results, .search-prompt {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.1em;
+  }
+}
+
+mat-paginator {
+  margin-top: 24px;
+}

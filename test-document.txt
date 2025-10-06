@@ -1,0 +1,31 @@
+Document Search Application - Test Document
+
+This is a sample document for testing the document search functionality.
+
+The application supports multiple file formats including PDF, DOC, DOCX, and TXT files.
+It uses advanced full-text search capabilities with MySQL FULLTEXT indexing to provide
+fast and accurate search results.
+
+Key Features:
+- Document upload with drag-and-drop support
+- Full-text search with relevance ranking
+- Real-time search suggestions
+- Result highlighting
+- Document management (view, download, delete)
+- Responsive Material Design interface
+
+Technical Stack:
+- Backend: PHP 8.0+ with custom routing and service architecture
+- Database: MySQL with FULLTEXT indexing
+- Frontend: Angular 16+ with TypeScript
+- UI Framework: Angular Material
+
+Search Terms to Test:
+- "document search"
+- "full-text"
+- "Angular Material"
+- "MySQL FULLTEXT"
+- "drag-and-drop"
+
+This document contains various keywords that can be used to test the search functionality
+and verify that content extraction and indexing are working correctly.

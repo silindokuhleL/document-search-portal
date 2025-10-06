@@ -1,0 +1,16 @@
+{
+    "name": "document-search/backend",
+    "description": "Document Search Backend API",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "vlucas/phpdotenv": "^5.5",
+        "smalot/pdfparser": "^2.5",
+        "phpoffice/phpword": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
