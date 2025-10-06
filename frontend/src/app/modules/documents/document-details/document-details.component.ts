@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DocumentService } from '../../../services/document.service';
-import { SearchService } from '../../../services/search.service';
 import { Document } from '../../../models/document.model';
+import { SearchService } from '../../../services/search.service';
+import { DocumentService } from '../../../services/document.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-document-details',
@@ -29,7 +29,7 @@ export class DocumentDetailsComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.searchService.getDocumentContent(this.data.documentId).subscribe({
+    this.documentService.getDocument(this.data.documentId).subscribe({
       next: (doc: any) => {
         this.document = doc;
         this.isLoading = false;
