@@ -83,8 +83,13 @@ class ParserService
      */
     private function cleanText(string $text): string
     {
-        $text = preg_replace('/\s+/', ' ', $text);
+        // Remove control characters but preserve line breaks and spaces
         $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
+        // Normalize line breaks to \n
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        // Remove excessive blank lines (more than 2 consecutive)
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+        // Trim
         $text = trim($text);
         
         return $text;
