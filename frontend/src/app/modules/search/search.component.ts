@@ -126,8 +126,10 @@ export class SearchComponent implements OnInit {
   }
 
   selectSuggestion(suggestion: string): void {
-    this.searchControl.setValue(suggestion);
     this.suggestions = [];
+    this.searchControl.setValue(suggestion);
+    this.currentPage = 1;
+    this.performSearch(suggestion);
   }
 
   downloadDocument(result: SearchResult): void {

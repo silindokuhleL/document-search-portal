@@ -49,17 +49,45 @@ class SearchService
         
         $offset = ($page - 1) * $limit;
         
-        $words = explode(' ', $query);
+        $words = array_filter(array_map('trim', explode(' ', $query)));
         $hasShortWords = false;
+        $allWordsShort = true;
+
         foreach ($words as $word) {
-            if (strlen(trim($word)) < 4 && strlen(trim($word)) > 0) {
+            if (strlen($word) < 4) {
                 $hasShortWords = true;
-                break;
+            } else {
+                $allWordsShort = false;
             }
         }
         
-        if ($hasShortWords) {
+        // Use LIKE search for short words or phrases, otherwise use FULLTEXT
+        if ($hasShortWords || strlen($query) < 4) {
             $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'created_at DESC';
+            
+            // Build LIKE conditions for better matching
+            $likeConditions = [];
+            $likeParams = [];
+            
+            // Search in content
+            $likeConditions[] = 'content_text LIKE ?';
+            $likeParams[] = '%' . $query . '%';
+            
+            // Search in filename
+            $likeConditions[] = 'original_filename LIKE ?';
+            $likeParams[] = '%' . $query . '%';
+            
+            // Also search for individual words if a query has multiple words
+            if (count($words) > 1) {
+                foreach ($words as $word) {
+                    if (strlen($word) >= 2) {
+                        $likeConditions[] = 'content_text LIKE ?';
+                        $likeParams[] = '%' . $word . '%';
+                    }
+                }
+            }
+            
+            $whereClause = implode(' OR ', $likeConditions);
             
             $sql = "SELECT 
                         id, 
@@ -71,18 +99,19 @@ class SearchService
                         1 as relevance,
                         SUBSTRING(content_text, 1, 500) as preview
                     FROM documents 
-                    WHERE content_text LIKE ?
+                    WHERE $whereClause
                     ORDER BY $orderClause
                     LIMIT ? OFFSET ?";
             
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['%' . $query . '%', $limit, $offset]);
+            $stmt->execute(array_merge($likeParams, [$limit, $offset]));
             $results = $stmt->fetchAll();
             
-            $countSql = "SELECT COUNT(*) as total FROM documents WHERE content_text LIKE ?";
+            $countSql = "SELECT COUNT(*) as total FROM documents WHERE $whereClause";
             $countStmt = $this->db->prepare($countSql);
-            $countStmt->execute(['%' . $query . '%']);
+            $countStmt->execute($likeParams);
         } else {
+            // Use FULLTEXT search for longer queries
             $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'relevance DESC';
             
             $sql = "SELECT 
@@ -97,20 +126,22 @@ class SearchService
                     FROM documents 
                     WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
                        OR original_filename LIKE ?
+                       OR content_text LIKE ?
                     ORDER BY $orderClause
                     LIMIT ? OFFSET ?";
             
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$query, $query, '%' . $query . '%', $limit, $offset]);
+            $stmt->execute([$query, $query, '%' . $query . '%', '%' . $query . '%', $limit, $offset]);
             $results = $stmt->fetchAll();
             
-            // Get total count for FULLTEXT search
+            // Get total count
             $countSql = "SELECT COUNT(*) as total 
                          FROM documents 
                          WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
-                            OR original_filename LIKE ?";
+                            OR original_filename LIKE ?
+                            OR content_text LIKE ?";
             $countStmt = $this->db->prepare($countSql);
-            $countStmt->execute([$query, '%' . $query . '%']);
+            $countStmt->execute([$query, '%' . $query . '%', '%' . $query . '%']);
         }
         $total = $countStmt->fetch()['total'];
 
@@ -215,16 +246,77 @@ class SearchService
             return [];
         }
         
-        $sql = "SELECT DISTINCT original_filename 
+        // Get documents that match the query
+        $sql = "SELECT content_text, original_filename
                 FROM documents 
                 WHERE original_filename LIKE ? 
+                   OR content_text LIKE ?
                    OR MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
                 LIMIT ?";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(["%$query%", $query, $limit]);
+        $stmt->execute(["%$query%", "%$query%", $query, $limit * 3]);
+        $documents = $stmt->fetchAll();
         
-        return array_column($stmt->fetchAll(), 'original_filename');
+        $suggestions = [];
+        $queryLower = strtolower($query);
+        
+        foreach ($documents as $doc) {
+            // Extract words/phrases from content that contain the query
+            $content = $doc['content_text'];
+            $filename = $doc['original_filename'];
+            
+            // Split content into sentences
+            $sentences = preg_split('/[.!?\n]+/', $content);
+            
+            foreach ($sentences as $sentence) {
+                $sentence = trim($sentence);
+                if (empty($sentence)) continue;
+                
+                // Check if sentence contains the query
+                if (stripos($sentence, $query) !== false) {
+                    // Extract words around the query match
+                    $words = preg_split('/\s+/', $sentence);
+                    
+                    // Find the matching word index
+                    foreach ($words as $index => $word) {
+                        if (stripos($word, $query) !== false) {
+                            // Get 2-4 words context
+                            $start = max(0, $index - 1);
+                            $end = min(count($words), $index + 3);
+                            $phrase = implode(' ', array_slice($words, $start, $end - $start));
+                            
+                            // Clean up the phrase
+                            $phrase = preg_replace('/[^a-zA-Z0-9\s-]/', '', $phrase);
+                            $phrase = trim($phrase);
+                            
+                            if (strlen($phrase) >= 3 && strlen($phrase) <= 50) {
+                                $suggestions[] = $phrase;
+                            }
+                            
+                            if (count($suggestions) >= $limit) {
+                                break 3; // Break all loops
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Also add filename-based suggestions if they match
+            $filenameParts = preg_split('/[._\-\s]+/', pathinfo($filename, PATHINFO_FILENAME));
+            foreach ($filenameParts as $part) {
+                if (strlen($part) >= 3 && stripos($part, $query) !== false) {
+                    $suggestions[] = $part;
+                    if (count($suggestions) >= $limit) {
+                        break 2;
+                    }
+                }
+            }
+        }
+        
+        // Remove duplicates and return unique suggestions
+        $suggestions = array_unique($suggestions);
+        return array_values(array_slice($suggestions, 0, $limit));
     }
 
     /**
