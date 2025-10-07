@@ -17,9 +17,7 @@ export class ApiResponseInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          // Check if response has the new format with success/data
           if (event.body && typeof event.body === 'object' && 'success' in event.body) {
-            // Extract data from the response
             const body = event.body.data || event.body;
             return event.clone({ body });
           }
@@ -27,7 +25,6 @@ export class ApiResponseInterceptor implements HttpInterceptor {
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
-        // Handle error responses
         let errorMessage = 'An error occurred';
         
         if (error.error && typeof error.error === 'object') {
