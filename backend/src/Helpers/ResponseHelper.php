@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Throwable;
+
 class ResponseHelper
 {
     /**
@@ -11,7 +13,7 @@ class ResponseHelper
      * @param int $code
      * @return void
      */
-    public static function success($data = null, string $message = 'Success', int $code = 200): void
+    public static function success($data = null, string $message = 'Success', int $code = 200)
     {
         http_response_code($code);
         header('Content-Type: application/json');
@@ -50,7 +52,6 @@ class ResponseHelper
             $response['errors'] = $errors;
         }
         
-        // Only include stack trace in development
         if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development' && $errors !== null) {
             $response['debug'] = $errors;
         }
@@ -58,19 +59,17 @@ class ResponseHelper
         echo json_encode($response, JSON_PRETTY_PRINT);
         exit;
     }
-    
+
     /**
-     * Send a not found response
      * @param string $message
-     * @return void
+     * @return voidw
      */
     public static function notFound(string $message = 'Resource not found'): void
     {
         self::error($message, 404);
     }
-    
+
     /**
-     * Send a validation error response
      * @param string $message
      * @param array $errors
      * @return void
@@ -79,14 +78,13 @@ class ResponseHelper
     {
         self::error($message, 422, $errors);
     }
-    
+
     /**
-     * Send a server error response
      * @param string $message
-     * @param \Throwable|null $exception
+     * @param Throwable|null $exception
      * @return void
      */
-    public static function serverError(string $message = 'Internal server error', ?\Throwable $exception = null): void
+    public static function serverError(string $message = 'Internal server error', ?Throwable $exception = null): void
     {
         // Log the exception
         if ($exception !== null) {

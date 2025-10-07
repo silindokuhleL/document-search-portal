@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Services\ParserService;
 use App\Services\SearchService;
-use App\Services\StorageService;
 use App\Helpers\ResponseHelper;
+use App\Services\StorageService;
 
 class DocumentController
 {

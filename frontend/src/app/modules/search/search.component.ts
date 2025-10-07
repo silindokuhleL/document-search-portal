@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { of } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap, timeout, catchError } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { SearchResult } from '../../models/document.model';
 import { SearchService } from '../../services/search.service';
 import { DocumentService } from '../../services/document.service';
-import { SearchResult } from '../../models/document.model';
-import { of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, timeout, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search',
@@ -33,7 +33,7 @@ export class SearchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Setup search with debounce
+    // Setup search with debouncing
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
@@ -63,7 +63,7 @@ export class SearchComponent implements OnInit {
 
     this.searchService.search(query, this.sortBy, this.currentPage, this.pageSize)
       .pipe(
-        timeout(30000), // 30 second timeout
+        timeout(30000), // 30 second timeouts
         catchError(error => {
           console.error('Search error:', error);
           return of({
