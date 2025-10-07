@@ -5,6 +5,14 @@
 .search-field {
   width: 100%;
   font-size: 16px;
+
+  input {
+    padding-left: 8px;
+  }
+
+  .mat-mdc-form-field-icon-prefix {
+    padding-right: 8px;
+  }
 }
 
 .suggestions {
