@@ -14,15 +14,20 @@ class SearchService
         $this->db = $db;
         $this->cache = $cache ?? new CacheService();
     }
-    
+
+    /**
+     * @param string $query
+     * @param string $sortBy
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
     public function search(string $query, string $sortBy = 'relevance', int $page = 1, int $limit = 10): array
     {
         $startTime = microtime(true);
         
-        // Generate cache key
         $cacheKey = "search:" . md5($query . $sortBy . $page . $limit);
         
-        // Try to get from cache
         $cached = $this->cache->get($cacheKey);
         if ($cached !== null) {
             $cached['cached'] = true;
@@ -44,7 +49,6 @@ class SearchService
         
         $offset = ($page - 1) * $limit;
         
-        // Check if query contains short words (< 4 chars) - MySQL FULLTEXT limitation
         $words = explode(' ', $query);
         $hasShortWords = false;
         foreach ($words as $word) {
@@ -54,9 +58,7 @@ class SearchService
             }
         }
         
-        // Use LIKE fallback for short words, FULLTEXT for longer queries
         if ($hasShortWords) {
-            // Fallback to LIKE search for short words
             $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'created_at DESC';
             
             $sql = "SELECT 
@@ -77,13 +79,10 @@ class SearchService
             $stmt->execute(['%' . $query . '%', $limit, $offset]);
             $results = $stmt->fetchAll();
             
-            // Get total count for LIKE search
             $countSql = "SELECT COUNT(*) as total FROM documents WHERE content_text LIKE ?";
             $countStmt = $this->db->prepare($countSql);
             $countStmt->execute(['%' . $query . '%']);
-            $total = $countStmt->fetch()['total'];
         } else {
-            // Use MySQL FULLTEXT search for better performance
             $orderClause = $sortBy === 'date' ? 'created_at DESC' : 'relevance DESC';
             
             $sql = "SELECT 
@@ -112,14 +111,14 @@ class SearchService
                             OR original_filename LIKE ?";
             $countStmt = $this->db->prepare($countSql);
             $countStmt->execute([$query, '%' . $query . '%']);
-            $total = $countStmt->fetch()['total'];
         }
-        
+        $total = $countStmt->fetch()['total'];
+
         // Get context-aware preview and highlight matches
         foreach ($results as &$doc) {
             // Get full content to find match context
             $fullContent = $this->getFullContent($doc['id']);
-            $doc['preview'] = $this->getContextPreview($fullContent, $query, 500);
+            $doc['preview'] = $this->getContextPreview($fullContent, $query);
             $doc['preview'] = $this->highlightMatches($doc['preview'], $query);
         }
         unset($doc); // Break the reference
@@ -142,7 +141,11 @@ class SearchService
         
         return $response;
     }
-    
+
+    /**
+     * @param int $id
+     * @return string
+     */
     private function getFullContent(int $id): string
     {
         $stmt = $this->db->prepare('SELECT content_text FROM documents WHERE id = ?');
@@ -150,8 +153,13 @@ class SearchService
         $doc = $stmt->fetch();
         return $doc ? $doc['content_text'] : '';
     }
-    
-    private function getContextPreview(string $content, string $query, int $maxLength = 500): string
+
+    /**
+     * @param string $content
+     * @param string $query
+     * @return string
+     */
+    private function getContextPreview(string $content, string $query): string
     {
         if (empty($content)) {
             return '';
@@ -172,16 +180,16 @@ class SearchService
             }
         }
         
-        // If no match found, return beginning of content
+        // If no match found, the return beginning of content
         if ($firstMatchPos === false) {
-            return substr($content, 0, $maxLength);
+            return substr($content, 0, 500);
         }
         
         // Calculate start position to center the match
-        $contextStart = max(0, $firstMatchPos - (int)($maxLength / 3));
+        $contextStart = max(0, $firstMatchPos - (int)(500 / 3));
         
         // Extract preview
-        $preview = substr($content, $contextStart, $maxLength);
+        $preview = substr($content, $contextStart, 500);
         
         // Add ellipsis if we're not at the start
         if ($contextStart > 0) {
@@ -189,13 +197,18 @@ class SearchService
         }
         
         // Add ellipsis if there's more content
-        if ($contextStart + $maxLength < strlen($content)) {
+        if ($contextStart + 500 < strlen($content)) {
             $preview .= '...';
         }
         
         return $preview;
     }
-    
+
+    /**
+     * @param string $query
+     * @param int $limit
+     * @return array
+     */
     public function getSuggestions(string $query, int $limit = 5): array
     {
         if (strlen($query) < 2) {
@@ -213,13 +226,18 @@ class SearchService
         
         return array_column($stmt->fetchAll(), 'original_filename');
     }
-    
+
+    /**
+     * @param string $text
+     * @param string $query
+     * @return string
+     */
     private function highlightMatches(string $text, string $query): string
     {
         $words = explode(' ', $query);
         
         foreach ($words as $word) {
-            if (strlen($word) > 2) { // Only highlight words longer than 2 chars
+            if (strlen($word) > 2) {
                 $text = preg_replace(
                     '/(' . preg_quote($word, '/') . ')/i',
                     '<mark>$1</mark>',
@@ -230,7 +248,11 @@ class SearchService
         
         return $text;
     }
-    
+
+    /**
+     * @param int $id
+     * @return array|null
+     */
     public function getDocumentContent(int $id): ?array
     {
         $stmt = $this->db->prepare(

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Exception;
 
 class CacheService
 {
@@ -19,9 +18,8 @@ class CacheService
     }
 
     /**
-     * Get cached value
      * @param string $key
-     * @return mixed|null
+     * @return mixed
      */
     public function get(string $key): mixed
     {
@@ -34,7 +32,6 @@ class CacheService
         $data = file_get_contents($filename);
         $cache = unserialize($data);
 
-        // Check if expired
         if ($cache['expires_at'] < time()) {
             unlink($filename);
             return null;
@@ -44,10 +41,9 @@ class CacheService
     }
 
     /**
-     * Set cache value
      * @param string $key
      * @param mixed $value
-     * @param int|null $ttl Time to live in seconds
+     * @param int|null $ttl
      * @return bool
      */
     public function set(string $key, mixed $value, ?int $ttl = null): bool
@@ -65,7 +61,6 @@ class CacheService
     }
 
     /**
-     * Delete cached value
      * @param string $key
      * @return bool
      */
@@ -81,7 +76,6 @@ class CacheService
     }
 
     /**
-     * Clear all cache
      * @return void
      */
     public function clear(): void
@@ -96,7 +90,6 @@ class CacheService
     }
 
     /**
-     * Get cache filename for key
      * @param string $key
      * @return string
      */
@@ -106,7 +99,6 @@ class CacheService
     }
 
     /**
-     * Remember: Get from cache or execute callback and cache result
      * @param string $key
      * @param callable $callback
      * @param int|null $ttl

@@ -90,9 +90,7 @@ class ParserService
         // Remove excessive blank lines (more than 2 consecutive)
         $text = preg_replace('/\n{3,}/', "\n\n", $text);
         // Trim
-        $text = trim($text);
-        
-        return $text;
+        return trim($text);
     }
 
     /**

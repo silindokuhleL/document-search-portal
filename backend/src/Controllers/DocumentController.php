@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Services\StorageService;
 use App\Services\ParserService;
 use App\Services\SearchService;
+use App\Services\StorageService;
 
 class DocumentController
 {
@@ -21,7 +21,10 @@ class DocumentController
         $this->parserService = $parserService;
         $this->searchService = $searchService;
     }
-    
+
+    /**
+     * @return void
+     */
     public function upload(): void
     {
         try {
@@ -31,13 +34,10 @@ class DocumentController
             
             $file = $_FILES['file'];
             
-            // Validate file
             $this->parserService->validateFile($file);
             
-            // Parse content
             $content = $this->parserService->parseFile($file['tmp_name'], $file['type']);
             
-            // Save document
             $document = $this->storageService->saveDocument($file, $content);
             
             jsonResponse([
@@ -49,7 +49,10 @@ class DocumentController
             errorResponse($e->getMessage(), 400);
         }
     }
-    
+
+    /**
+     * @return void
+     */
     public function list(): void
     {
         $page = (int)($_GET['page'] ?? 1);
@@ -58,7 +61,11 @@ class DocumentController
         $result = $this->storageService->getAllDocuments($page, $limit);
         jsonResponse($result);
     }
-    
+
+    /**
+     * @param string $id
+     * @return void
+     */
     public function get(string $id): void
     {
         $document = $this->storageService->getDocumentById((int)$id);
@@ -69,7 +76,11 @@ class DocumentController
         
         jsonResponse($document);
     }
-    
+
+    /**
+     * @param string $id
+     * @return void
+     */
     public function delete(string $id): void
     {
         $success = $this->storageService->deleteDocument((int)$id);
@@ -80,7 +91,10 @@ class DocumentController
         
         jsonResponse(['message' => 'Document deleted successfully']);
     }
-    
+
+    /**
+     * @return void
+     */
     public function search(): void
     {
         $query = $_GET['q'] ?? '';
@@ -91,7 +105,10 @@ class DocumentController
         $result = $this->searchService->search($query, $sortBy, $page, $limit);
         jsonResponse($result);
     }
-    
+
+    /**
+     * @return void
+     */
     public function suggestions(): void
     {
         $query = $_GET['q'] ?? '';
@@ -100,7 +117,11 @@ class DocumentController
         $suggestions = $this->searchService->getSuggestions($query, $limit);
         jsonResponse(['suggestions' => $suggestions]);
     }
-    
+
+    /**
+     * @param string $id
+     * @return void
+     */
     public function download(string $id): void
     {
         try {
@@ -116,7 +137,6 @@ class DocumentController
                 errorResponse('Document not found', 404);
             }
             
-            // Determine content type
             $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
             $contentType = match($extension) {
                 'pdf' => 'application/pdf',

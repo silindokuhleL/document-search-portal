@@ -6,7 +6,8 @@
         "php": ">=8.0",
         "vlucas/phpdotenv": "^5.5",
         "smalot/pdfparser": "^2.5",
-        "phpoffice/phpword": "^1.1"
+        "phpoffice/phpword": "^1.1",
+      "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
