@@ -1,21 +1,24 @@
 # Document Search Backend
 
-PHP 8.0+ backend API for document management and search.
+PHP 8.0+ backend API for document management and full-text search.
 
 ## Features
 
-- Document upload (PDF, DOC, DOCX, TXT)
-- Full-text search with MySQL FULLTEXT indexing
-- Document parsing and content extraction
-- RESTful API endpoints
-- CORS support for frontend integration
+- **Document Upload**: Support for PDF and TXT files
+- **Full-Text Search**: MySQL FULLTEXT indexing with intelligent fallback to LIKE search
+- **Smart Suggestions**: Context-aware search suggestions extracted from document content
+- **Document Parsing**: Automatic content extraction from uploaded files
+- **Caching System**: Built-in caching for improved search performance
+- **RESTful API**: Clean, well-structured API endpoints
+- **CORS Support**: Configured for frontend integration
 
 ## Requirements
 
 - PHP 8.0 or higher
-- MySQL 5.7+ or MariaDB 10.2+
-- Composer
-- Apache with mod_rewrite (or nginx)
+- MySQL 5.7+ or MariaDB 10.2+ (with FULLTEXT search support)
+- Composer (dependency management)
+- Apache with mod_rewrite or nginx
+- PHP Extensions: PDO, pdo_mysql, mbstring, fileinfo
 
 ## Installation
 
@@ -45,6 +48,7 @@ mysql -u root -p document_search < migrations/001_create_documents_table.sql
 5. Set permissions:
 ```bash
 chmod -R 755 uploads/
+chmod -R 755 cache/
 ```
 
 ## Running the Server
@@ -62,44 +66,157 @@ Point your virtual host document root to the `public` directory.
 
 ### Documents
 
-- `POST /api/documents/upload` - Upload a document
-- `GET /api/documents` - List all documents (with pagination)
-- `GET /api/documents/{id}` - Get document details
-- `DELETE /api/documents/{id}` - Delete a document
-- `GET /api/documents/{id}/download` - Download a document
+- **`POST /api/documents/upload`**
+  - Upload a document
+  - Form data: `file` (multipart/form-data)
+  - Returns: Document metadata with ID
+
+- **`GET /api/documents`**
+  - List all documents with pagination
+  - Query params: `page` (default: 1), `limit` (default: 10)
+  - Returns: Paginated document list
+
+- **`GET /api/documents/{id}`**
+  - Get specific document details
+  - Returns: Document metadata and content
+
+- **`DELETE /api/documents/{id}`**
+  - Delete a document and its file
+  - Returns: Success confirmation
+
+- **`GET /api/documents/{id}/download`**
+  - Download original document file
+  - Returns: File stream with appropriate headers
 
 ### Search
 
-- `GET /api/search?q={query}&sort={relevance|date}&page={page}&limit={limit}` - Search documents
-- `GET /api/suggestions?q={query}&limit={limit}` - Get search suggestions
+- **`GET /api/search`**
+  - Full-text search across documents
+  - Query params:
+    - `q` (required): Search query
+    - `sort` (optional): `relevance` or `date` (default: relevance)
+    - `page` (optional): Page number (default: 1)
+    - `limit` (optional): Results per page (default: 10)
+  - Returns: Search results with highlighted previews, relevance scores, and pagination info
+
+- **`GET /api/suggestions`**
+  - Get intelligent search suggestions based on document content
+  - Query params:
+    - `q` (required): Partial search query (min 2 chars)
+    - `limit` (optional): Max suggestions (default: 5)
+  - Returns: Array of contextual search term suggestions
 
 ## Configuration
 
-Edit `.env` file:
+Edit `.env` file (copy from `.env.example`):
 
-```
+```env
+APP_ENV=development
+
+# Database Configuration
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=document_search
 DB_USER=root
 DB_PASS=your_password
 
+# Upload Settings
 UPLOAD_DIR=uploads
-ALLOWED_EXTENSIONS=pdf,doc,docx,txt
-MAX_FILE_SIZE=10485760
+ALLOWED_EXTENSIONS=pdf,txt  # Only PDF and TXT supported
+MAX_FILE_SIZE=10485760      # 10MB in bytes
 
+# CORS Configuration
 CORS_ORIGIN=http://localhost:4200
 ```
 
+**Note**: Currently only PDF and TXT files are supported. DOC/DOCX support would require implementing additional parsing logic with `phpoffice/phpword`.
+
+## Project Structure
+
+```
+backend/
+├── public/
+│   ├── index.php           # Entry point & routing
+│   └── .htaccess           # Apache rewrite rules
+├── src/
+│   ├── Controllers/
+│   │   └── DocumentController.php
+│   ├── Services/
+│   │   ├── SearchService.php      # Search & suggestions logic
+│   │   ├── StorageService.php     # Database operations
+│   │   ├── ParserService.php      # File parsing
+│   │   └── CacheService.php       # Search result caching
+│   ├── Helpers/
+│   │   ├── ResponseHelper.php     # JSON response formatting
+│   │   └── Router.php             # Request routing
+│   └── bootstrap.php              # App initialization
+├── migrations/
+│   └── 001_create_documents_table.sql
+├── uploads/                       # Uploaded files storage
+├── cache/                         # Search cache files
+├── composer.json                  # PHP dependencies
+└── .env                          # Environment configuration
+```
+
+## Key Features Explained
+
+### Intelligent Search
+- **FULLTEXT Search**: For queries with words ≥4 characters
+- **LIKE Search**: Fallback for short words or phrases
+- **Multi-field Search**: Searches both content and filenames
+- **Context-aware Previews**: Shows relevant excerpts with matches highlighted
+
+### Smart Suggestions
+- Extracts meaningful phrases from document content
+- Returns contextual search terms (not just filenames)
+- Includes filename-based suggestions as fallback
+- Ensures suggestions always return results when clicked
+
+### Caching
+- Automatic caching of search results (5-minute TTL)
+- File-based cache system
+- Improves performance for repeated searches
+
 ## Testing
 
-Upload a document:
+### Upload a document:
 ```bash
 curl -X POST http://localhost:8000/api/documents/upload \
   -F "file=@/path/to/document.pdf"
 ```
 
-Search documents:
+### List documents:
 ```bash
-curl "http://localhost:8000/api/search?q=your+search+term"
+curl "http://localhost:8000/api/documents?page=1&limit=10"
 ```
+
+### Search documents:
+```bash
+curl "http://localhost:8000/api/search?q=your+search+term&sort=relevance"
+```
+
+### Get suggestions:
+```bash
+curl "http://localhost:8000/api/suggestions?q=search&limit=5"
+```
+
+### Download document:
+```bash
+curl "http://localhost:8000/api/documents/1/download" -o downloaded.pdf
+```
+
+## Troubleshooting
+
+### FULLTEXT Search Not Working
+- Ensure MySQL version supports FULLTEXT on InnoDB tables (5.6+)
+- Verify `content_text` column has FULLTEXT index
+- Check minimum word length: MySQL default is 4 characters
+
+### File Upload Fails
+- Check `uploads/` directory permissions (755 or 777)
+- Verify `MAX_FILE_SIZE` in `.env`
+- Check PHP `upload_max_filesize` and `post_max_size` settings
+
+### CORS Errors
+- Ensure `CORS_ORIGIN` in `.env` matches frontend URL
+- Check Apache/nginx CORS headers configuration
