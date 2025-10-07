@@ -191,11 +191,10 @@ npm run build
 
 ### Code Quality
 ```bash
-# Lint TypeScript
+# Lint TypeScript and HTML files
+npm run lint
+# or
 ng lint
-
-# Format code
-npm run format
 ```
 
 ## Browser Support
