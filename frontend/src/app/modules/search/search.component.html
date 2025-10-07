@@ -24,7 +24,10 @@
         <div 
           class="suggestion-item" 
           *ngFor="let suggestion of suggestions"
-          (click)="selectSuggestion(suggestion)">
+          (click)="selectSuggestion(suggestion)"
+          (keyup.enter)="selectSuggestion(suggestion)"
+          tabindex="0"
+          role="button">
           <mat-icon>search</mat-icon>
           {{ suggestion }}
         </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { DocumentService } from '../../../services/document.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class UploaderComponent {
   uploadSuccess: string | null = null;
   selectedFile: File | null = null;
 
-  constructor(private documentService: DocumentService) {}
+  private readonly documentService = inject(DocumentService);
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -63,7 +63,7 @@ export class UploaderComponent {
     this.uploadSuccess = null;
 
     this.documentService.uploadDocument(this.selectedFile).subscribe({
-      next: (response) => {
+      next: () => {
         this.isUploading = false;
         this.uploadSuccess = `File "${this.selectedFile!.name}" uploaded successfully!`;
         this.selectedFile = null;

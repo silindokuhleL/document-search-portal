@@ -15,10 +15,11 @@ export class ApiResponseInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
+      map((event: HttpEvent<unknown>) => {
         if (event instanceof HttpResponse) {
           if (event.body && typeof event.body === 'object' && 'success' in event.body) {
-            const body = event.body.data || event.body;
+            const responseBody = event.body as { data?: unknown; success: unknown };
+            const body = responseBody.data || event.body;
             return event.clone({ body });
           }
         }

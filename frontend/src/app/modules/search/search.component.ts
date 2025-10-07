@@ -1,10 +1,11 @@
-import { of } from 'rxjs';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, timeout, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { SearchResult } from '../../models/document.model';
 import { SearchService } from '../../services/search.service';
 import { DocumentService } from '../../services/document.service';
-import { debounceTime, distinctUntilChanged, timeout, catchError } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-search',
@@ -27,10 +28,8 @@ export class SearchComponent implements OnInit {
   // Sorting
   sortBy: 'relevance' | 'date' = 'relevance';
 
-  constructor(
-    private searchService: SearchService,
-    private documentService: DocumentService
-  ) {}
+  private readonly searchService = inject(SearchService);
+  private readonly documentService = inject(DocumentService);
 
   ngOnInit(): void {
     // Setup search with debouncing
@@ -116,7 +115,7 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     const query = this.searchControl.value;
@@ -142,7 +141,7 @@ export class SearchComponent implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
       },
-      error: (error) => {
+      error: () => {
         alert('Failed to download document');
       }
     });

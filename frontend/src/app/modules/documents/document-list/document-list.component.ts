@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { Document } from '../../../models/document.model';
 import { DocumentService } from '../../../services/document.service';
 import { DocumentDetailsComponent } from '../document-details/document-details.component';
@@ -21,10 +22,8 @@ export class DocumentListComponent implements OnInit {
 
   displayedColumns: string[] = ['filename', 'type', 'size', 'date', 'actions'];
 
-  constructor(
-    private documentService: DocumentService,
-    private dialog: MatDialog
-  ) {}
+  private readonly documentService = inject(DocumentService);
+  private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.loadDocuments();
@@ -41,14 +40,14 @@ export class DocumentListComponent implements OnInit {
         this.totalPages = response.totalPages;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.error = 'Failed to load documents. Please try again.';
         this.isLoading = false;
       }
     });
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     this.loadDocuments();
@@ -71,7 +70,7 @@ export class DocumentListComponent implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
       },
-      error: (error) => {
+      error: () => {
         alert('Failed to download document');
       }
     });
@@ -86,7 +85,7 @@ export class DocumentListComponent implements OnInit {
       next: () => {
         this.loadDocuments();
       },
-      error: (error) => {
+      error: () => {
         alert('Failed to delete document');
       }
     });

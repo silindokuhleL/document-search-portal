@@ -1,8 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { Document } from '../../../models/document.model';
-import { SearchService } from '../../../services/search.service';
-import { DocumentService } from '../../../services/document.service';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Document } from '../../../models/document.model';
+import { DocumentService } from '../../../services/document.service';
 
 @Component({
   selector: 'app-document-details',
@@ -14,12 +13,9 @@ export class DocumentDetailsComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { documentId: number },
-    private dialogRef: MatDialogRef<DocumentDetailsComponent>,
-    private documentService: DocumentService,
-    private searchService: SearchService
-  ) {}
+  public data: { documentId: number } = inject(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<DocumentDetailsComponent>);
+  private readonly documentService = inject(DocumentService);
 
   ngOnInit(): void {
     this.loadDocument();
@@ -30,11 +26,11 @@ export class DocumentDetailsComponent implements OnInit {
     this.error = null;
 
     this.documentService.getDocument(this.data.documentId).subscribe({
-      next: (doc: any) => {
+      next: (doc) => {
         this.document = doc;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.error = 'Failed to load document details';
         this.isLoading = false;
       }
@@ -57,7 +53,7 @@ export class DocumentDetailsComponent implements OnInit {
         link.click();
         window.URL.revokeObjectURL(url);
       },
-      error: (error) => {
+      error: () => {
         alert('Failed to download document');
       }
     });
