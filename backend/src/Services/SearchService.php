@@ -97,38 +97,103 @@ class SearchService
                         SUBSTRING(content_text, 1, 500) as preview
                     FROM documents 
                     WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
+                       OR original_filename LIKE ?
                     ORDER BY $orderClause
                     LIMIT ? OFFSET ?";
             
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$query, $query, $limit, $offset]);
+            $stmt->execute([$query, $query, '%' . $query . '%', $limit, $offset]);
             $results = $stmt->fetchAll();
             
             // Get total count for FULLTEXT search
             $countSql = "SELECT COUNT(*) as total 
                          FROM documents 
-                         WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)";
+                         WHERE MATCH(content_text) AGAINST(? IN NATURAL LANGUAGE MODE)
+                            OR original_filename LIKE ?";
             $countStmt = $this->db->prepare($countSql);
-            $countStmt->execute([$query]);
+            $countStmt->execute([$query, '%' . $query . '%']);
             $total = $countStmt->fetch()['total'];
         }
         
-        // Highlight matches in preview
-        foreach ($results as &$result) {
-            $result['preview'] = $this->highlightMatches($result['preview'], $query);
+        // Get context-aware preview and highlight matches
+        foreach ($results as &$doc) {
+            // Get full content to find match context
+            $fullContent = $this->getFullContent($doc['id']);
+            $doc['preview'] = $this->getContextPreview($fullContent, $query, 500);
+            $doc['preview'] = $this->highlightMatches($doc['preview'], $query);
         }
+        unset($doc); // Break the reference
         
         $endTime = microtime(true);
         $searchTime = round(($endTime - $startTime) * 1000, 2); // Convert to milliseconds
         
-        return [
+        $response = [
             'results' => $results,
             'total' => (int)$total,
             'page' => $page,
             'limit' => $limit,
             'totalPages' => ceil($total / $limit),
-            'searchTime' => $searchTime
+            'searchTime' => $searchTime,
+            'cached' => false
         ];
+        
+        // Cache the result for 5 minutes (300 seconds)
+        $this->cache->set($cacheKey, $response, 300);
+        
+        return $response;
+    }
+    
+    private function getFullContent(int $id): string
+    {
+        $stmt = $this->db->prepare('SELECT content_text FROM documents WHERE id = ?');
+        $stmt->execute([$id]);
+        $doc = $stmt->fetch();
+        return $doc ? $doc['content_text'] : '';
+    }
+    
+    private function getContextPreview(string $content, string $query, int $maxLength = 500): string
+    {
+        if (empty($content)) {
+            return '';
+        }
+        
+        // Find the position of the first occurrence of any word in the query
+        $queryWords = explode(' ', strtolower($query));
+        $contentLower = strtolower($content);
+        $firstMatchPos = false;
+        
+        foreach ($queryWords as $word) {
+            $word = trim($word);
+            if (strlen($word) > 0) {
+                $pos = strpos($contentLower, $word);
+                if ($pos !== false && ($firstMatchPos === false || $pos < $firstMatchPos)) {
+                    $firstMatchPos = $pos;
+                }
+            }
+        }
+        
+        // If no match found, return beginning of content
+        if ($firstMatchPos === false) {
+            return substr($content, 0, $maxLength);
+        }
+        
+        // Calculate start position to center the match
+        $contextStart = max(0, $firstMatchPos - (int)($maxLength / 3));
+        
+        // Extract preview
+        $preview = substr($content, $contextStart, $maxLength);
+        
+        // Add ellipsis if we're not at the start
+        if ($contextStart > 0) {
+            $preview = '...' . $preview;
+        }
+        
+        // Add ellipsis if there's more content
+        if ($contextStart + $maxLength < strlen($content)) {
+            $preview .= '...';
+        }
+        
+        return $preview;
     }
     
     public function getSuggestions(string $query, int $limit = 5): array

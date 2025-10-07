@@ -103,19 +103,37 @@ class DocumentController
     
     public function download(string $id): void
     {
-        $filePath = $this->storageService->getFilePath((int)$id);
-        
-        if (!$filePath || !file_exists($filePath)) {
-            errorResponse('File not found', 404);
+        try {
+            $filePath = $this->storageService->getFilePath((int)$id);
+            
+            if (!$filePath || !file_exists($filePath)) {
+                errorResponse('File not found', 404);
+            }
+            
+            $document = $this->storageService->getDocumentById((int)$id);
+            
+            if (!$document) {
+                errorResponse('Document not found', 404);
+            }
+            
+            // Determine content type
+            $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+            $contentType = match($extension) {
+                'pdf' => 'application/pdf',
+                'txt' => 'text/plain',
+                'doc', 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                default => 'application/octet-stream'
+            };
+            
+            header('Content-Type: ' . $contentType);
+            header('Content-Disposition: attachment; filename="' . $document['original_filename'] . '"');
+            header('Content-Length: ' . filesize($filePath));
+            
+            readfile($filePath);
+            exit;
+        } catch (\Exception $e) {
+            error_log("Download error: " . $e->getMessage());
+            errorResponse('Failed to download file: ' . $e->getMessage(), 500);
         }
-        
-        $document = $this->storageService->getDocumentById((int)$id);
-        
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . $document['original_filename'] . '"');
-        header('Content-Length: ' . filesize($filePath));
-        
-        readfile($filePath);
-        exit;
     }
 }
