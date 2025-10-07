@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Services\ParserService;
 use App\Services\SearchService;
 use App\Services\StorageService;
+use App\Helpers\ResponseHelper;
 
 class DocumentController
 {
@@ -29,7 +30,7 @@ class DocumentController
     {
         try {
             if (!isset($_FILES['file'])) {
-                errorResponse('No file uploaded', 400);
+                ResponseHelper::error('No file uploaded', 400);
             }
             
             $file = $_FILES['file'];
@@ -40,13 +41,10 @@ class DocumentController
             
             $document = $this->storageService->saveDocument($file, $content);
             
-            jsonResponse([
-                'message' => 'Document uploaded successfully',
-                'document' => $document
-            ], 201);
+            ResponseHelper::created($document, 'Document uploaded successfully');
             
         } catch (\Exception $e) {
-            errorResponse($e->getMessage(), 400);
+            ResponseHelper::error($e->getMessage(), 400);
         }
     }
 
@@ -59,7 +57,7 @@ class DocumentController
         $limit = (int)($_GET['limit'] ?? 10);
         
         $result = $this->storageService->getAllDocuments($page, $limit);
-        jsonResponse($result);
+        ResponseHelper::success($result);
     }
 
     /**
@@ -71,10 +69,10 @@ class DocumentController
         $document = $this->storageService->getDocumentById((int)$id);
         
         if (!$document) {
-            errorResponse('Document not found', 404);
+            ResponseHelper::notFound('Document not found');
         }
         
-        jsonResponse($document);
+        ResponseHelper::success($document);
     }
 
     /**
@@ -86,10 +84,10 @@ class DocumentController
         $success = $this->storageService->deleteDocument((int)$id);
         
         if (!$success) {
-            errorResponse('Document not found', 404);
+            ResponseHelper::notFound('Document not found');
         }
         
-        jsonResponse(['message' => 'Document deleted successfully']);
+        ResponseHelper::success(null, 'Document deleted successfully');
     }
 
     /**
@@ -103,7 +101,7 @@ class DocumentController
         $limit = (int)($_GET['limit'] ?? 10);
         
         $result = $this->searchService->search($query, $sortBy, $page, $limit);
-        jsonResponse($result);
+        ResponseHelper::success($result);
     }
 
     /**
@@ -115,7 +113,7 @@ class DocumentController
         $limit = (int)($_GET['limit'] ?? 5);
         
         $suggestions = $this->searchService->getSuggestions($query, $limit);
-        jsonResponse(['suggestions' => $suggestions]);
+        ResponseHelper::success(['suggestions' => $suggestions]);
     }
 
     /**
@@ -128,13 +126,13 @@ class DocumentController
             $filePath = $this->storageService->getFilePath((int)$id);
             
             if (!$filePath || !file_exists($filePath)) {
-                errorResponse('File not found', 404);
+                ResponseHelper::notFound('File not found');
             }
             
             $document = $this->storageService->getDocumentById((int)$id);
             
             if (!$document) {
-                errorResponse('Document not found', 404);
+                ResponseHelper::notFound('Document not found');
             }
             
             $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
@@ -152,8 +150,7 @@ class DocumentController
             readfile($filePath);
             exit;
         } catch (\Exception $e) {
-            error_log("Download error: " . $e->getMessage());
-            errorResponse('Failed to download file: ' . $e->getMessage(), 500);
+            ResponseHelper::serverError('Failed to download file', $e);
         }
     }
 }

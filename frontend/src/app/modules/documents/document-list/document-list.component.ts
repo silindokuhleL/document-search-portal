@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DocumentService } from '../../../services/document.service';
-import { Document } from '../../../models/document.model';
 import { MatDialog } from '@angular/material/dialog';
+import { Document } from '../../../models/document.model';
+import { DocumentService } from '../../../services/document.service';
 import { DocumentDetailsComponent } from '../document-details/document-details.component';
 
 @Component({
@@ -14,7 +14,6 @@ export class DocumentListComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
   
-  // Pagination
   currentPage = 1;
   pageSize = 10;
   totalDocuments = 0;

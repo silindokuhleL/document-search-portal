@@ -3,17 +3,33 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
+use App\Helpers\ResponseHelper;
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
-// Set error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+// Set default environment
+if (!isset($_ENV['APP_ENV'])) {
+    $_ENV['APP_ENV'] = 'development';
+}
+
+// Set error reporting based on environment
+if ($_ENV['APP_ENV'] === 'production') {
+    error_reporting(0);
+    ini_set('display_errors', '0');
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+}
 
 // Set timezone
 date_default_timezone_set('UTC');
+
+// Global exception handler
+set_exception_handler(function ($exception) {
+    ResponseHelper::serverError('An unexpected error occurred', $exception);
+});
 
 // Database connection
 function getDbConnection(): PDO
@@ -36,9 +52,7 @@ function getDbConnection(): PDO
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
-            exit;
+            ResponseHelper::serverError('Database connection failed', $e);
         }
     }
     
@@ -59,19 +73,4 @@ function setCorsHeaders(): void
         http_response_code(200);
         exit;
     }
-}
-
-// JSON response helper
-function jsonResponse(array $data, int $statusCode = 200): void
-{
-    http_response_code($statusCode);
-    header('Content-Type: application/json');
-    echo json_encode($data);
-    exit;
-}
-
-// Error handler
-function errorResponse(string $message, int $statusCode = 400): void
-{
-    jsonResponse(['error' => $message], $statusCode);
 }
