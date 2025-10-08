@@ -26,7 +26,7 @@ if ! command -v php &> /dev/null; then
     exit 1
 fi
 
-PHP_VERSION=$(php -r 'echo PHP_VERSION;')
+PHP_VERSION=$(php -r "echo PHP_VERSION;")
 echo "✓ PHP version: $PHP_VERSION"
 
 # Check for Composer
@@ -57,6 +57,15 @@ if [ ! -d "uploads" ]; then
     echo -e "${GREEN}✓ Created uploads directory${NC}"
 else
     echo "✓ uploads directory already exists"
+fi
+
+# Create cache directory
+if [ ! -d "cache" ]; then
+    mkdir -p cache
+    chmod 755 cache
+    echo -e "${GREEN}✓ Created cache directory${NC}"
+else
+    echo "✓ cache directory already exists"
 fi
 
 cd ..
