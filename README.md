@@ -61,16 +61,35 @@ Ensure you have the following installed:
 - ✅ Node.js 16+ and npm
 - ✅ Angular CLI 16+ (`npm install -g @angular/cli`)
 
-### Automated Setup
+### 🚀 Automated Setup (Recommended)
 
-Run the setup script for quick installation:
+**The fastest way to get started:**
 
 ```bash
 chmod +x setup.sh
 ./setup.sh
 ```
 
-### Manual Backend Setup
+This script will:
+- ✅ Check all prerequisites
+- ✅ Install backend dependencies (composer)
+- ✅ Install frontend dependencies (npm)
+- ✅ Create necessary directories (uploads/, cache/)
+- ✅ Set up configuration files (.env)
+- ✅ Display next steps for database setup
+
+**After running the script, follow the displayed instructions to:**
+1. Configure your database credentials in `backend/.env`
+2. Create the database and run migrations
+3. Start the backend and frontend servers
+
+---
+
+### Manual Setup (Alternative)
+
+If you prefer manual setup or the automated script fails:
+
+#### Manual Backend Setup
 
 1. Navigate to backend directory and install dependencies:
 ```bash
