@@ -386,10 +386,7 @@ npm run build
 6. **Search Caching**: File-based cache with 5-minute TTL for performance
 7. **Accessibility**: WCAG compliant with keyboard navigation and ARIA labels
 
-## License
+## Project Information
 
-MIT
-
-## Author
-
-Document Search Application - Full Stack Assessment
+**Purpose**: Full Stack Developer Assessment  
+**Technologies**: PHP 8.0+, Angular 16+, MySQL
