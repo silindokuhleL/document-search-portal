@@ -179,28 +179,72 @@ backend/
 
 ## Testing
 
-### Upload a document:
+### Automated Testing (Recommended)
+
+Use the included test script to test all API endpoints automatically:
+
 ```bash
-curl -X POST http://localhost:8000/api/documents/upload \
-  -F "file=@/path/to/document.pdf"
+chmod +x test-api.sh
+./test-api.sh
 ```
 
-### List documents:
+**What the script tests:**
+- ✅ Backend server availability check
+- ✅ Document upload (uses `../test-document.txt`)
+- ✅ Document listing with pagination
+- ✅ Search functionality with relevance scoring
+- ✅ Context-aware search suggestions
+- ✅ HTTP status codes and JSON responses
+
+**Sample Output:**
+```
+🧪 Testing Document Search API
+==============================
+
+Checking if backend server is running...
+✓ Backend server is running
+
+1. Testing document upload...
+Status: 201
+
+2. Testing document list...
+Status: 200
+
+3. Testing search...
+Status: 200
+
+4. Testing suggestions...
+Status: 200
+
+✅ API tests complete!
+```
+
+### Manual Testing
+
+Test individual endpoints with curl:
+
+**Upload a document:**
+```bash
+curl -X POST http://localhost:8000/api/documents/upload \
+  -F "file=@../test-document.txt"
+```
+
+**List documents:**
 ```bash
 curl "http://localhost:8000/api/documents?page=1&limit=10"
 ```
 
-### Search documents:
+**Search documents:**
 ```bash
-curl "http://localhost:8000/api/search?q=your+search+term&sort=relevance"
+curl "http://localhost:8000/api/search?q=test&sort=relevance"
 ```
 
-### Get suggestions:
+**Get suggestions:**
 ```bash
-curl "http://localhost:8000/api/suggestions?q=search&limit=5"
+curl "http://localhost:8000/api/suggestions?q=test&limit=5"
 ```
 
-### Download document:
+**Download document:**
 ```bash
 curl "http://localhost:8000/api/documents/1/download" -o downloaded.pdf
 ```

@@ -273,7 +273,27 @@ export const environment = {
 
 ### Backend API Testing
 
-Test API endpoints using curl:
+**Option 1: Automated Test Script (Recommended)**
+
+Use the included test script to test all API endpoints:
+
+```bash
+cd backend
+chmod +x test-api.sh
+./test-api.sh
+```
+
+This script will:
+- ✅ Check if backend server is running
+- ✅ Test document upload
+- ✅ Test document listing
+- ✅ Test search functionality
+- ✅ Test search suggestions
+- ✅ Display HTTP status codes and responses
+
+**Option 2: Manual Testing with curl**
+
+Test individual endpoints:
 
 ```bash
 # Upload document
@@ -284,20 +304,13 @@ curl -X POST http://localhost:8000/api/documents/upload \
 curl "http://localhost:8000/api/documents?page=1&limit=10"
 
 # Search
-curl "http://localhost:8000/api/search?q=artificial&sort=relevance"
+curl "http://localhost:8000/api/search?q=test&sort=relevance"
 
 # Get suggestions
-curl "http://localhost:8000/api/suggestions?q=art&limit=5"
+curl "http://localhost:8000/api/suggestions?q=test&limit=5"
 
 # Download document
 curl "http://localhost:8000/api/documents/1/download" -o downloaded.pdf
-```
-
-Or use the included test script:
-```bash
-cd backend
-chmod +x test-api.sh
-./test-api.sh
 ```
 
 ### Frontend Testing
@@ -308,9 +321,13 @@ cd frontend
 # Run unit tests
 npm test
 
-# Run linter
+# Run linter (checks code quality)
 npm run lint
 ```
+
+**Expected Results:**
+- All unit tests should pass
+- Linter should report 0 errors
 
 ## Production Deployment
 
