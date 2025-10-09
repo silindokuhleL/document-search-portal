@@ -1,0 +1,29 @@
+a:3:{s:5:"value";a:7:{s:7:"results";a:4:{i:0;a:8:{s:2:"id";i:21;s:8:"filename";s:41:"cors-laravel_1759819741_68e4b7ddb04cd.pdf";s:17:"original_filename";s:16:"cors-laravel.pdf";s:9:"file_size";i:96908;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-07 08:49:01";s:9:"relevance";i:1;s:7:"preview";s:506:"...et up 
+to pull the primary frontend URL from your environment file (.env), which is a great practice. 
+Based on this file, here are several ways to add your .amplifyapp.com links to the CORS 
+allowed origins list. Choose the one that best fits your workflow and security needs. 
+Option 1: Add a Specific Amplify URL (Best for a single, static URL) 
+If you have a single, unchanging Amplify URL (e.g., from a custom domain connected to 
+Amplify), you can add it directly to the allowed_origins array. ...";}i:1;a:8:{s:2:"id";i:20;s:8:"filename";s:75:"ISJ107V_Project_Proposal_-_Assignment_1_-_2025_1759777570_68e41322910b5.pdf";s:17:"original_filename";s:50:"ISJ107V Project Proposal - Assignment 1 - 2025.pdf";s:9:"file_size";i:275952;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:06:10";s:9:"relevance";i:1;s:7:"preview";s:506:"...l is a written document used to initiate a new project. It must persuade a 
+sponsor that a project must be started in order to address a specific issue or business 
+opportunity. For the sponsor to completely comprehend why the project is essential to the 
+business and what is entailed, it provides a detailed description of the foundation upon which 
+the project must be started. Additionally, it must spell out the consequences of rejecting the 
+project, forcing the sponsor to decide whether or no...";}i:2;a:8:{s:2:"id";i:18;s:8:"filename";s:51:"216734769_ISJ-Proposal_1759777533_68e412fd9ac23.pdf";s:17:"original_filename";s:26:"216734769_ISJ-Proposal.pdf";s:9:"file_size";i:141564;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:33";s:9:"relevance";i:1;s:7:"preview";s:506:"...nes a plan to create a smart, integrated salon management platform that 
+addresses operational challenges in the beauty industry. The system will combine AI-driven 
+appointment scheduling, calendar synchronization, CRM, and multi-channel communication 
+tools. It targets a 40% reduction in appointment no-shows, 25% increase in customer 
+retention, and higher operational efficiency. Built using React, Node.js, PostgreSQL, and 
+hosted on AWS, the platform will use microservices, secure APIs, and De...";}i:3;a:8:{s:2:"id";i:16;s:8:"filename";s:92:"LexisNexis___Take___home_assignment___Intermediate_PHP_Engineer_1759777510_68e412e6d5322.pdf";s:17:"original_filename";s:67:"LexisNexis _ Take‑home assignment _ Intermediate PHP Engineer.pdf";s:9:"file_size";i:74553;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:10";s:9:"relevance";i:1;s:7:"preview";s:506:"...documents efficiently (streaming/chunking)
+
+Frontend Requirements (Angular/TypeScript) 
+1.​Document Management Interface 
+-​Upload documents with drag-and-drop support 
+-​Display document list with pagination 
+-​Delete documents with confirmation 
+-​Show document details 
+2.​Search Interface 
+-​Search input with real-time suggestions (debounced) 
+-​Display search results with highlighted matches 
+-​Sort results by relevance or date 
+-​Show search performance metrics (time tak...";}}s:5:"total";i:4;s:4:"page";i:1;s:5:"limit";i:10;s:10:"totalPages";d:1;s:10:"searchTime";d:3.82;s:6:"cached";b:0;}s:10:"expires_at";i:1759841276;s:10:"created_at";i:1759840976;}

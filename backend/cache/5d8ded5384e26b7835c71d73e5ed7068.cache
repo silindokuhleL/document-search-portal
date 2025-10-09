@@ -1,0 +1,13 @@
+a:3:{s:5:"value";a:7:{s:7:"results";a:1:{i:0;a:8:{s:2:"id";i:18;s:8:"filename";s:51:"216734769_ISJ-Proposal_1759777533_68e412fd9ac23.pdf";s:17:"original_filename";s:26:"216734769_ISJ-Proposal.pdf";s:9:"file_size";i:141564;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:33";s:9:"relevance";d:0.6055193543434143;s:7:"preview";s:519:"...e: PostgreSQL, TimescaleDB 
+• APIs: RESTful, OpenAPI 
+• Cloud: AWS (EC2, S3, RDS, Lambda, CloudFront) 
+• Notifications: Twilio, Firebase 
+• Analytics: D3.js, <mark>Elasticsearch</mark> 
+• DevOps: Docker, GitHub Actions 
+• AI/NLP: Python, spaCy, scikit-learn 
+• Chatbots: Dialogflow, Intercom 
+• Social Booking: Facebook Graph API, Instagram Integration 
+• Payments: Stripe, PayFast, Manual Cash Confirmation Option
+
+Success Criteria 
+1. Operational Impact: No-show rate below 7% sustained 3+ mon...";}}s:5:"total";i:1;s:4:"page";i:1;s:5:"limit";i:10;s:10:"totalPages";d:1;s:10:"searchTime";d:53.1;s:6:"cached";b:0;}s:10:"expires_at";i:1759852623;s:10:"created_at";i:1759852323;}

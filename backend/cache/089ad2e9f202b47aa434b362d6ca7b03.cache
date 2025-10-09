@@ -1,0 +1,38 @@
+a:3:{s:5:"value";a:7:{s:7:"results";a:3:{i:0;a:8:{s:2:"id";i:22;s:8:"filename";s:42:"test-document_1759924157_68e64fbd306d5.txt";s:17:"original_filename";s:17:"test-document.txt";s:9:"file_size";i:1043;s:9:"file_type";s:10:"text/plain";s:10:"created_at";s:19:"2025-10-08 13:49:17";s:9:"relevance";d:0.8880301117897034;s:7:"preview";s:529:"Document Search Application - <mark>Test</mark> Document
+
+This is a sample document for <mark>test</mark>ing the document search functionality.
+
+The application supports multiple file formats including PDF, DOC, DOCX, and TXT files.
+It uses advanced full-text search capabilities with MySQL FULLTEXT indexing to provide
+fast and accurate search results.
+
+Key Features:
+- Document upload with drag-and-drop support
+- Full-text search with relevance ranking
+- Real-time search suggestions
+- Result highlighting
+- Document manage...";}i:1;a:8:{s:2:"id";i:16;s:8:"filename";s:92:"LexisNexis___Take___home_assignment___Intermediate_PHP_Engineer_1759777510_68e412e6d5322.pdf";s:17:"original_filename";s:67:"LexisNexis _ Take‑home assignment _ Intermediate PHP Engineer.pdf";s:9:"file_size";i:74553;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:10";s:9:"relevance";d:0.2960100471973419;s:7:"preview";s:519:"...ith TypeScript 
+Deliverables 
+1.​GitHub repository containing: 
+-​Complete source code for both backend and frontend 
+-​A README.md with instructions to build, <mark>test</mark>, and run locally. 
+-​A SOLUTION.md describing the design and trade-offs you made. 
+2.​Video Demo (5-10 minutes using Loom or similar): 
+-​Demonstrate the working application 
+-​Walk through your code architecture 
+-​Explain key design decisions 
+-​Discuss any trade-offs made 
+-​Highlight interesting technical impl...";}i:2;a:8:{s:2:"id";i:18;s:8:"filename";s:51:"216734769_ISJ-Proposal_1759777533_68e412fd9ac23.pdf";s:17:"original_filename";s:26:"216734769_ISJ-Proposal.pdf";s:9:"file_size";i:141564;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:33";s:9:"relevance";d:0;s:7:"preview";s:519:"...nning, Requirements, Design 
+2 Months 3-4 Backend/API, Calendar, CRM modules 
+3 Months 5-6 Mobile apps, AI, Chatbot, Social Media, and Payment Integration 
+4 Month 7 <mark>Test</mark>ing & Quality Assurance 
+5 Month 8 Staff Training & UAT 
+6 Month 9 Launch, Monitoring, Feedback Loops 
+ 
+Tools 
+• Frontend: React.js, React Native 
+• Backend: Node.js, Express 
+• Database: PostgreSQL, TimescaleDB 
+• APIs: RESTful, OpenAPI 
+• Cloud: AWS (EC2, S3, RDS, Lambda, CloudFront) 
+• Notifications: Twilio, Fire...";}}s:5:"total";i:3;s:4:"page";i:1;s:5:"limit";i:10;s:10:"totalPages";d:1;s:10:"searchTime";d:10.17;s:6:"cached";b:0;}s:10:"expires_at";i:1759924457;s:10:"created_at";i:1759924157;}

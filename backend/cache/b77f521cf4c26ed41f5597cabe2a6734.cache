@@ -1,0 +1,15 @@
+a:3:{s:5:"value";a:7:{s:7:"results";a:2:{i:0;a:8:{s:2:"id";i:21;s:8:"filename";s:41:"cors-laravel_1759819741_68e4b7ddb04cd.pdf";s:17:"original_filename";s:16:"cors-laravel.pdf";s:9:"file_size";i:96908;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-07 08:49:01";s:9:"relevance";i:1;s:7:"preview";s:516:"Excellent, you've provided the content of your config/cors.<mark>php</mark> file. This configuration is set up 
+to pull the primary frontend URL from your environment file (.env), which is a great practice. 
+Based on this file, here are several ways to add your .amplifyapp.com links to the CORS 
+allowed origins list. Choose the one that best fits your workflow and security needs. 
+Option 1: Add a Specific Amplify URL (Best for a single, static URL) 
+If you have a single, unchanging Amplify URL (e.g., from a ...";}i:1;a:8:{s:2:"id";i:16;s:8:"filename";s:92:"LexisNexis___Take___home_assignment___Intermediate_PHP_Engineer_1759777510_68e412e6d5322.pdf";s:17:"original_filename";s:67:"LexisNexis _ Take‑home assignment _ Intermediate PHP Engineer.pdf";s:9:"file_size";i:74553;s:9:"file_type";s:15:"application/pdf";s:10:"created_at";s:19:"2025-10-06 21:05:10";s:9:"relevance";i:1;s:7:"preview";s:542:"Take‑home assignment: Intermediate <mark>PHP</mark> 
+Engineer 
+Context 
+Company X is building a new lightweight document search system for internal research 
+purposes. The system needs to allow users to upload research documents, index their content, 
+and provide fast search capabilities with result highlighting. 
+ 
+As an Intermediate <mark>PHP</mark> Engineer, you'll be tasked with creating a proof-of-concept that 
+demonstrates your ability to build efficient, scalable solutions using core <mark>PHP</mark> principles and 
+modern f...";}}s:5:"total";i:2;s:4:"page";i:1;s:5:"limit";i:10;s:10:"totalPages";d:1;s:10:"searchTime";d:6.24;s:6:"cached";b:0;}s:10:"expires_at";i:1759839629;s:10:"created_at";i:1759839329;}

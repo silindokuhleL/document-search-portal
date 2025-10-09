@@ -42,6 +42,11 @@ CREATE DATABASE document_search CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 
 4. Run migrations:
 ```bash
+# Option A: Use the migration script (easiest)
+chmod +x migrate.sh
+./migrate.sh
+
+# Option B: Manual SQL command
 mysql -u root -p document_search < migrations/001_create_documents_table.sql
 ```
 
@@ -247,6 +252,47 @@ curl "http://localhost:8000/api/suggestions?q=test&limit=5"
 **Download document:**
 ```bash
 curl "http://localhost:8000/api/documents/1/download" -o downloaded.pdf
+```
+
+## Database Migrations
+
+### Refresh Migrations
+
+If you need to reset the database or refresh the schema:
+
+```bash
+chmod +x migrate.sh
+./migrate.sh
+```
+
+**What it does:**
+1. Drops the existing `document_search` database
+2. Creates a fresh database with proper charset/collation
+3. Runs all migration files
+4. Sets up FULLTEXT indexes
+
+⚠️ **Warning:** This will delete all existing documents and data.
+
+**When to use:**
+- After modifying migration files
+- To reset the database to a clean state
+- When troubleshooting database issues
+- During development to clear test data
+
+**Note:** If your backend server is running (`php -S localhost:8000`), it will automatically work with the refreshed database without needing a restart.
+
+### Alternative Scripts
+
+**Quick database setup (interactive):**
+```bash
+chmod +x setup-db-quick.sh
+./setup-db-quick.sh
+```
+
+**Full database setup with .env update:**
+```bash
+chmod +x setup-database.sh
+./setup-database.sh
 ```
 
 ## Troubleshooting

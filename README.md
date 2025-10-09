@@ -111,6 +111,12 @@ exit;
 
 5. Run migrations:
 ```bash
+# Option A: Use the migration script (easiest)
+cd backend
+chmod +x migrate.sh
+./migrate.sh
+
+# Option B: Manual SQL command
 mysql -u root -p document_search < migrations/001_create_documents_table.sql
 ```
 
@@ -328,6 +334,36 @@ npm run lint
 **Expected Results:**
 - All unit tests should pass
 - Linter should report 0 errors
+
+## Database Migrations
+
+### Refresh Migrations (Reset Database)
+
+If you need to refresh the database schema or reset all data:
+
+```bash
+cd backend
+chmod +x migrate.sh
+./migrate.sh
+```
+
+This script will:
+- ⚠️ **Drop the existing database** (all data will be lost)
+- ✅ Create a fresh database
+- ✅ Run all migrations
+- ✅ Set up FULLTEXT indexes
+
+**Note:** Your backend server (if running) will automatically work with the refreshed database. No restart needed.
+
+### Alternative: Manual Migration Refresh
+
+```bash
+# Drop and recreate database
+mysql -u root -p -e "DROP DATABASE IF EXISTS document_search; CREATE DATABASE document_search CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# Run migrations
+mysql -u root -p document_search < backend/migrations/001_create_documents_table.sql
+```
 
 ## Production Deployment
 
