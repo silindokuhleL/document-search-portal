@@ -128,8 +128,11 @@ chmod -R 755 cache/
 
 7. Start PHP server:
 ```bash
-cd public
-php -S localhost:8000
+# From backend directory
+php -S localhost:8000 -t public
+
+# Or if you prefer the traditional way
+cd public && php -S localhost:8000
 ```
 
 Backend API will be available at `http://localhost:8000`

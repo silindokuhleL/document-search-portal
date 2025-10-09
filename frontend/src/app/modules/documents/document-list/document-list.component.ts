@@ -35,13 +35,22 @@ export class DocumentListComponent implements OnInit {
 
     this.documentService.getDocuments(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        this.documents = response.documents;
-        this.totalDocuments = response.total;
-        this.totalPages = response.totalPages;
+        this.documents = response.documents || [];
+        this.totalDocuments = response.total || 0;
+        this.totalPages = response.totalPages || 0;
         this.isLoading = false;
       },
-      error: () => {
-        this.error = 'Failed to load documents. Please try again.';
+      error: (err) => {
+        console.error('Error loading documents:', err);
+        // Check if it's actually an error or just empty data
+        if (err.status === 0 || err.status >= 500) {
+          this.error = 'Failed to load documents. Please try again.';
+        } else {
+          // Treat as empty data
+          this.documents = [];
+          this.totalDocuments = 0;
+          this.totalPages = 0;
+        }
         this.isLoading = false;
       }
     });

@@ -58,11 +58,29 @@ chmod -R 755 cache/
 
 ## Running the Server
 
-### Using PHP Built-in Server (Development)
+### Quick Start (Easiest)
+
+Use the included startup script:
+
+```bash
+chmod +x serve.sh
+./serve.sh
+```
+
+### Manual Start
+
+**Option 1: From backend directory (Recommended)**
+```bash
+php -S localhost:8000 -t public
+```
+
+**Option 2: From public directory**
 ```bash
 cd public
 php -S localhost:8000
 ```
+
+The `-t public` flag tells PHP to use the `public` directory as the document root, so you don't need to `cd` into it.
 
 ### Using Apache
 Point your virtual host document root to the `public` directory.
