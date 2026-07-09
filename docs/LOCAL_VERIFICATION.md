@@ -61,6 +61,9 @@ Browser verification:
 - Frontend opened at `http://localhost:4200/`.
 - Document list loaded four local documents.
 - Search for `test` showed suggestions, two results, relevance scores, and highlighted matches.
+- Follow-up Browser check opened the frontend at `http://127.0.0.1:4210/`.
+- The page rendered the Document Search title, Documents navigation, Search navigation, upload area, supported formats text, and documents table.
+- No frontend console errors were reported for the `4210` frontend URL during that check.
 
 Important local note:
 
