@@ -64,12 +64,11 @@ flowchart LR
 
 ## Proof To Capture
 
-- Screenshot of the document upload flow.
-- Screenshot of the document list/detail flow.
-- Screenshot of search results with highlighted matches.
-- Screenshot of suggestions while typing.
-- API verification output from `backend/test-api.sh`.
-- Frontend build/lint output.
+- Screenshot of the document upload/list flow: `docs/proof-assets/document-list.jpg`.
+- Screenshot of search suggestions and highlighted matches: `docs/proof-assets/search-results.jpg`.
+- API verification output from `backend/test-api.sh`: recorded in `docs/LOCAL_VERIFICATION.md`.
+- Frontend build/lint output: recorded in `docs/LOCAL_VERIFICATION.md`.
+- Screenshot of the document detail modal.
 - Optional short walkthrough video.
 
 ## Portfolio Positioning
