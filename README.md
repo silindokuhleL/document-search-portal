@@ -8,15 +8,26 @@ This repository is being prepared as a public portfolio case study for backend-h
 
 - Case study: [docs/CASE_STUDY.md](docs/CASE_STUDY.md)
 - Proof checklist: [docs/PROOF_CHECKLIST.md](docs/PROOF_CHECKLIST.md)
+- Local verification log: [docs/LOCAL_VERIFICATION.md](docs/LOCAL_VERIFICATION.md)
 - Architecture decisions: [SOLUTION.md](SOLUTION.md)
 
 Current proof status:
 
 - Public repository: available.
 - Setup and architecture docs: available.
-- Screenshots: still to capture.
+- Screenshots: available below.
 - Live demo: not available yet.
-- Verification output: still to capture.
+- Verification output: recorded in [docs/LOCAL_VERIFICATION.md](docs/LOCAL_VERIFICATION.md).
+
+### Visual Proof
+
+#### Document Upload And Listing
+
+![Document upload and list screen](docs/proof-assets/document-list.jpg)
+
+#### Search Suggestions And Highlighted Results
+
+![Search suggestions and highlighted results](docs/proof-assets/search-results.jpg)
 
 ## 🎯 Overview
 

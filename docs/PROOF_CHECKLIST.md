@@ -10,25 +10,26 @@ Use this checklist before promoting Document Search Portal as a stronger portfol
 - [x] Frontend-specific documentation exists.
 - [x] Solution/design document exists.
 - [x] Case-study draft exists in `docs/CASE_STUDY.md`.
-- [ ] Add screenshots to `docs/proof-assets/`.
-- [ ] Link screenshots from the main README.
+- [x] Add screenshots to `docs/proof-assets/`.
+- [x] Link screenshots from the main README.
+- [x] Add local verification log.
 - [ ] Add repository topics on GitHub.
 - [ ] Add a concise GitHub repository description.
 
 ## Functional Proof
 
-- [ ] Backend dependencies install successfully with `composer install`.
-- [ ] Frontend dependencies install successfully with `npm install`.
-- [ ] Database migration runs successfully.
-- [ ] Backend API starts locally.
-- [ ] Frontend starts locally.
-- [ ] Sample TXT document uploads successfully.
+- [x] Backend dependencies are present locally and Composer validation passes.
+- [x] Frontend dependencies are present locally.
+- [ ] Database migration runs successfully from a fresh database.
+- [x] Backend API starts locally.
+- [x] Frontend starts locally.
+- [x] Sample TXT document uploads successfully.
 - [ ] Sample PDF document uploads successfully.
-- [ ] Document list returns uploaded files.
+- [x] Document list returns uploaded files.
 - [ ] Document details page opens.
-- [ ] Search returns relevant results.
-- [ ] Search result highlighting is visible.
-- [ ] Search suggestions appear while typing.
+- [x] Search returns relevant results.
+- [x] Search result highlighting is visible.
+- [x] Search suggestions appear while typing.
 - [ ] Document download works.
 - [ ] Document delete works.
 
@@ -56,12 +57,12 @@ npm start
 
 ## Portfolio Assets Needed
 
-- [ ] Upload screen screenshot.
-- [ ] Search results screenshot.
-- [ ] Search suggestions screenshot.
+- [x] Upload/list screen screenshot.
+- [x] Search results screenshot.
+- [x] Search suggestions screenshot.
 - [ ] Document detail screenshot.
-- [ ] API test output snippet.
-- [ ] Architecture diagram image or Mermaid diagram.
+- [x] API test output summary.
+- [x] Architecture diagram as Mermaid in `docs/CASE_STUDY.md`.
 - [ ] 60-second project explanation.
 
 ## Case Study Quality Gate
@@ -70,5 +71,5 @@ npm start
 - [ ] Stack is grouped cleanly.
 - [ ] Personal contribution is explicit.
 - [ ] Technical decisions are explained.
-- [ ] Proof assets are visible.
+- [x] Proof assets are visible.
 - [ ] Limitations or future improvements are honest.
