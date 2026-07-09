@@ -30,6 +30,10 @@ Current proof status:
 
 ![Search suggestions and highlighted results](docs/proof-assets/search-results.jpg)
 
+#### Document Detail Modal
+
+![Document detail modal with content preview and download action](docs/proof-assets/document-detail.png)
+
 ## 🎯 Overview
 
 This application demonstrates a production-ready document management and search system featuring:
@@ -446,13 +450,16 @@ This repository is used as portfolio proof for backend-heavy product work. Curre
 - Caches repeated search responses for 5 minutes using a file-based cache layer.
 - Uses 300ms frontend search debouncing to avoid firing a request on every keystroke.
 - Local API verification confirmed upload, list, search, and suggestions returned successful HTTP responses.
+- Follow-up API verification confirmed document detail, PDF upload, PDF download, and delete workflows.
+- Temporary database migration proof confirmed the `documents` table, BTREE indexes, and FULLTEXT content index are created from the migration SQL.
 - Local frontend verification confirmed document listing, suggestions, highlighted search results, lint, and production build.
+- Browser verification confirmed the document detail modal renders with a content preview and download action.
 
 Not yet claimed:
 
 - No production benchmark has been captured yet for large datasets.
 - No public live demo is available yet.
-- PDF upload, document detail, download, and delete still need final proof capture before this becomes a fully complete case study.
+- A public walkthrough video is still optional future proof.
 
 ## 🔒 Security Features
 
