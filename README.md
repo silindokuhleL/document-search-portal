@@ -18,6 +18,7 @@ Current proof status:
 - Screenshots: available below.
 - Live demo: not available yet.
 - Verification output: recorded in [docs/LOCAL_VERIFICATION.md](docs/LOCAL_VERIFICATION.md).
+- Measured proof: documented in [docs/CASE_STUDY.md](docs/CASE_STUDY.md#proof-and-outcomes).
 
 ### Visual Proof
 
@@ -434,13 +435,24 @@ npm run build
 - Verify documents have content extracted
 - Check MySQL FULLTEXT minimum word length settings
 
-## 📊 Performance Metrics
+## Proof And Outcomes
 
-- **Search Speed**: <100ms for 10K+ documents
-- **Upload**: Supports PDF and TXT files up to 10MB
-- **Debounce**: 300ms delay reduces API calls by ~80%
-- **Caching**: 5-minute TTL reduces repeated search time by ~90%
-- **Pagination**: Efficient server-side pagination
+This repository is used as portfolio proof for backend-heavy product work. Current verified outcomes:
+
+- Implements 7 REST API actions across document upload, listing, details, delete, download, search, and suggestions.
+- Uses MySQL FULLTEXT indexing on extracted document content, with LIKE fallback for short queries that FULLTEXT may ignore.
+- Supports PDF and TXT uploads up to 10MB through backend file validation.
+- Returns `searchTime` and `cached` metadata in API responses so search behavior can be inspected during testing.
+- Caches repeated search responses for 5 minutes using a file-based cache layer.
+- Uses 300ms frontend search debouncing to avoid firing a request on every keystroke.
+- Local API verification confirmed upload, list, search, and suggestions returned successful HTTP responses.
+- Local frontend verification confirmed document listing, suggestions, highlighted search results, lint, and production build.
+
+Not yet claimed:
+
+- No production benchmark has been captured yet for large datasets.
+- No public live demo is available yet.
+- PDF upload, document detail, download, and delete still need final proof capture before this becomes a fully complete case study.
 
 ## 🔒 Security Features
 

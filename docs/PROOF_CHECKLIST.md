@@ -13,6 +13,7 @@ Use this checklist before promoting Document Search Portal as a stronger portfol
 - [x] Add screenshots to `docs/proof-assets/`.
 - [x] Link screenshots from the main README.
 - [x] Add local verification log.
+- [x] Add proof/outcomes section without unsupported benchmark claims.
 - [ ] Add repository topics on GitHub.
 - [ ] Add a concise GitHub repository description.
 
@@ -63,6 +64,7 @@ npm start
 - [ ] Document detail screenshot.
 - [x] API test output summary.
 - [x] Architecture diagram as Mermaid in `docs/CASE_STUDY.md`.
+- [x] Verified proof/outcomes summary.
 - [ ] 60-second project explanation.
 
 ## Case Study Quality Gate
@@ -72,4 +74,4 @@ npm start
 - [ ] Personal contribution is explicit.
 - [ ] Technical decisions are explained.
 - [x] Proof assets are visible.
-- [ ] Limitations or future improvements are honest.
+- [x] Limitations or future improvements are honest.
