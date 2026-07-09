@@ -1,6 +1,22 @@
-# Document Search Application
+# Document Search Portal
 
 A full-stack document search application with **PHP 8.0+ backend** and **Angular 16+ frontend**. Upload documents (PDF and TXT), and perform full-text search with context-aware suggestions and highlighted results.
+
+## Portfolio Proof
+
+This repository is being prepared as a public portfolio case study for backend-heavy product work. It demonstrates REST API design, file upload safety, document parsing, MySQL FULLTEXT search, result caching, Angular integration, and clear setup documentation.
+
+- Case study: [docs/CASE_STUDY.md](docs/CASE_STUDY.md)
+- Proof checklist: [docs/PROOF_CHECKLIST.md](docs/PROOF_CHECKLIST.md)
+- Architecture decisions: [SOLUTION.md](SOLUTION.md)
+
+Current proof status:
+
+- Public repository: available.
+- Setup and architecture docs: available.
+- Screenshots: still to capture.
+- Live demo: not available yet.
+- Verification output: still to capture.
 
 ## 🎯 Overview
 
