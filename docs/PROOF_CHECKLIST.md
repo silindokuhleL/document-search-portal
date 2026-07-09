@@ -21,18 +21,18 @@ Use this checklist before promoting Document Search Portal as a stronger portfol
 
 - [x] Backend dependencies are present locally and Composer validation passes.
 - [x] Frontend dependencies are present locally.
-- [ ] Database migration runs successfully from a fresh database.
+- [x] Database migration runs successfully from a fresh temporary database.
 - [x] Backend API starts locally.
 - [x] Frontend starts locally.
 - [x] Sample TXT document uploads successfully.
-- [ ] Sample PDF document uploads successfully.
+- [x] Sample PDF document uploads successfully.
 - [x] Document list returns uploaded files.
-- [ ] Document details page opens.
+- [x] Document details page opens.
 - [x] Search returns relevant results.
 - [x] Search result highlighting is visible.
 - [x] Search suggestions appear while typing.
-- [ ] Document download works.
-- [ ] Document delete works.
+- [x] Document download works.
+- [x] Document delete works.
 
 ## Verification Commands
 
@@ -61,7 +61,7 @@ npm start
 - [x] Upload/list screen screenshot.
 - [x] Search results screenshot.
 - [x] Search suggestions screenshot.
-- [ ] Document detail screenshot.
+- [x] Document detail screenshot.
 - [x] API test output summary.
 - [x] Architecture diagram as Mermaid in `docs/CASE_STUDY.md`.
 - [x] Verified proof/outcomes summary.

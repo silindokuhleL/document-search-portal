@@ -67,29 +67,30 @@ flowchart LR
 Verified proof currently available in this repository:
 
 - **7 API actions implemented:** upload, list, detail, delete, download, search, and suggestions.
-- **4 API workflows locally verified:** TXT upload, document listing, search, and suggestions.
+- **8 API workflow checks locally verified:** TXT upload, document listing, search, suggestions, detail, PDF upload, PDF download, and delete.
+- **Fresh migration proof:** the migration SQL was run against a temporary database and confirmed the `documents` table, BTREE indexes, and FULLTEXT content index.
 - **Search architecture:** MySQL FULLTEXT index on extracted document content, plus LIKE fallback for short queries and filename/content matching.
 - **Search response observability:** API responses include `searchTime` and `cached` fields so repeated searches can be inspected during testing.
 - **Caching:** repeated search responses are cached for 5 minutes through the file-based cache service.
 - **Upload guardrails:** PDF/TXT upload validation, file size limit, and unique stored filenames.
-- **Frontend behavior verified:** document listing, search suggestions, highlighted matches, lint, and production build.
-- **Public proof assets:** screenshots for document listing and search results are committed under `docs/proof-assets/`.
+- **Frontend behavior verified:** document listing, document detail modal, search suggestions, highlighted matches, lint, and production build.
+- **Public proof assets:** screenshots for document listing, search results, and document detail are committed under `docs/proof-assets/`.
 
 Honest limitations:
 
 - No production benchmark has been captured yet, so the project should not claim large-dataset performance numbers.
 - No public live demo is available yet.
-- PDF upload, document detail, download, and delete workflows still need final proof capture.
+- A public walkthrough video is still optional future proof.
 
 ## Proof To Capture
 
 - Screenshot of the document upload/list flow: `docs/proof-assets/document-list.jpg`.
 - Screenshot of search suggestions and highlighted matches: `docs/proof-assets/search-results.jpg`.
+- Screenshot of the document detail modal: `docs/proof-assets/document-detail.png`.
 - API verification output from `backend/test-api.sh`: recorded in `docs/LOCAL_VERIFICATION.md`.
 - Frontend build/lint output: recorded in `docs/LOCAL_VERIFICATION.md`.
-- Screenshot of the document detail modal.
-- Fresh-database migration output.
-- PDF upload, document download, and delete verification output.
+- Fresh-database migration output: recorded in `docs/LOCAL_VERIFICATION.md`.
+- PDF upload, document download, detail, and delete verification output: recorded in `docs/LOCAL_VERIFICATION.md`.
 - Optional short walkthrough video.
 
 ## Portfolio Positioning
